@@ -298,7 +298,8 @@ instance Monoid SavedConfig where
         configLibCoverage         = combine configLibCoverage,
         configExactConfiguration  = combine configExactConfiguration,
         configFlagError           = combine configFlagError,
-        configRelocatable         = combine configRelocatable
+        configRelocatable         = combine configRelocatable,
+        configFinalChecks         = combine configFinalChecks
         }
         where
           combine        = combine'        savedConfigureFlags

@@ -327,7 +327,8 @@ data ConfigFlags = ConfigFlags {
     configFlagError :: Flag String,
       -- ^Halt and show an error message indicating an error in flag assignment
     configRelocatable :: Flag Bool, -- ^ Enable relocatable package built
-    configDebugInfo :: Flag DebugInfoLevel  -- ^ Emit debug info.
+    configDebugInfo :: Flag DebugInfoLevel,  -- ^ Emit debug info.
+    configFinalChecks :: Flag Bool    -- ^ Enable final checks
   }
   deriving (Generic, Read, Show)
 
@@ -370,7 +371,8 @@ defaultConfigFlags progConf = emptyConfigFlags {
     configExactConfiguration = Flag False,
     configFlagError    = NoFlag,
     configRelocatable  = Flag False,
-    configDebugInfo    = Flag NoDebugInfo
+    configDebugInfo    = Flag NoDebugInfo,
+    configFinalChecks = Flag True
   }
 
 configureCommand :: ProgramConfiguration -> CommandUI ConfigFlags
@@ -617,6 +619,11 @@ configureOptions showOrParseArgs =
          "building a package that is relocatable. (GHC only)"
          configRelocatable (\v flags -> flags { configRelocatable = v})
          (boolOpt [] [])
+
+      ,option "" ["final-checks"]
+         "final checks"
+         configFinalChecks (\v flags -> flags { configFinalChecks = v })
+         (boolOpt [] [])
       ]
   where
     readFlagList :: String -> FlagAssignment
@@ -772,7 +779,8 @@ instance Monoid ConfigFlags where
     configBenchmarks          = mempty,
     configFlagError     = mempty,
     configRelocatable   = mempty,
-    configDebugInfo     = mempty
+    configDebugInfo     = mempty,
+    configFinalChecks   = mempty
   }
   mappend a b =  ConfigFlags {
     configPrograms      = configPrograms b,
@@ -814,7 +822,8 @@ instance Monoid ConfigFlags where
     configBenchmarks          = combine configBenchmarks,
     configFlagError     = combine configFlagError,
     configRelocatable   = combine configRelocatable,
-    configDebugInfo     = combine configDebugInfo
+    configDebugInfo     = combine configDebugInfo,
+    configFinalChecks   = combine configFinalChecks
   }
     where combine field = field a `mappend` field b
 

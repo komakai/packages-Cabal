@@ -12,6 +12,7 @@ cabal-install/tests/PackageTests/*/dist/
 *.p_hi
 *.prof
 *.tix
+*.hc
 cabal.config
 dist-sandbox
 dist
@@ -22,6 +23,7 @@ dist
 .#*
 *~
 .*.swp
+.DS_Store
 
 # GHC build
 
